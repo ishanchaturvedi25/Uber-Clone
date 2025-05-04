@@ -29,7 +29,8 @@ module.exports.registerUser = async (req, res, next) => {
 
     const token = user.generateAuthToken();
 
-    res.status(201).json({ token, user });
+    res.cookie('token', token);
+    res.status(201).json({ token, user: { email: user.email, fullName: user.fullName } });
 }
 
 module.exports.loginUser = async (req, res, next) => {
@@ -46,15 +47,15 @@ module.exports.loginUser = async (req, res, next) => {
 
         if (!user)
             return res.status(401).json({ message: 'Invalid email or password' });
-        const isPassword = await user.comparePassword(password);
 
+        const isPassword = await user.comparePassword(password);
         if (!isPassword)
             return res.status(401).json({ message: 'Invalid email or password' });
         
         const token = user.generateAuthToken();
 
         res.cookie('token', token);
-        return res.status(200).json({ token });
+        return res.status(200).json({ token, user: { email: user.email, fullName: user.fullName } });
     } catch (err) {
         console.log('Error while loging in: ', err);
         res.status(400).json({ message: err.message || 'Error while loging in' });
