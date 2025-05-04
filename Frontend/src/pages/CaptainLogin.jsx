@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
-function CaptainLogin() {
+const CaptainLogin = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [captainData, setCaptainData] = useState({})

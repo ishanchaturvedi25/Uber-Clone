@@ -1,14 +1,32 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { ToastContainer, toast } from 'react-toastify'
+import axios from 'axios'
+import { UserDataContext } from '../context/userContext'
 
-function UserLogin() {
+const UserLogin = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [userData, setUserData] = useState({})
 
-    const submitHandler = (e) => {
+    const navigate = useNavigate()
+
+    const { user, setUser } = useContext(UserDataContext)
+    
+    const submitHandler = async (e) => {
         e.preventDefault()
-        setUserData({email: email, password: password})
+        const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+        if (!regex.test(email)) {
+            toast('Please enter a valid email address')
+            return
+        }
+
+        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/users/login`, {email, password}, { withCredentials: true })
+
+        if (response.status == 200) {
+            setUser(response.data.user)
+            localStorage.setItem('token', response.data.token)
+            navigate('/home')
+        }
         setEmail('')
         setPassword('')
     }
@@ -49,6 +67,7 @@ function UserLogin() {
             <div>
                 <Link to='/captain-login' className='bg-[#10b461] flex items-center justify-center text-white font-semibold rounded px-4 py-2 w-full text-lg placeholder:text-base mb-5'>Sign in as Captain</Link>
             </div>
+            <ToastContainer />
         </div>
     )
 }

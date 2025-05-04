@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
-function CaptainSignup() {
+const CaptainSignup = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [firstName, setFirstName] = useState('')
@@ -68,7 +68,7 @@ function CaptainSignup() {
                         onChange={e => setPassword(e.target.value)}
                         className='bg-[#eeeeee] rounded px-4 py-2 border w-full text-lg placeholder:text-base mb-6' 
                     />
-                    <button className='bg-[#111] text-white font-semibold rounded px-4 py-2 w-full text-lg placeholder:text-base mb-3'>Login</button>
+                    <button className='bg-[#111] text-white font-semibold rounded px-4 py-2 w-full text-lg placeholder:text-base mb-3'>Signup</button>
                 </form>
 
                 <p className='text-center'>Already have an account? <Link to='/captain-login' className='text-blue-600'>Login here</Link></p>

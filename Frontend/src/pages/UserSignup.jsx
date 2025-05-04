@@ -1,23 +1,55 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { ToastContainer, toast } from 'react-toastify'
+import axios from 'axios'
+import { UserDataContext } from '../context/userContext'
 
-function UserSignup() {
+const UserSignup = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
-    const [userData, setUserData] = useState('')
 
-    const submitHandler = (e) => {
+    const navigate = useNavigate()
+
+    const { user, setUser } = React.useContext(UserDataContext)
+
+    const submitHandler = async (e) => {
         e.preventDefault()
-        setUserData({
+        if (firstName.length < 3) {
+            toast('First name must be atleast 3 characters long')
+            return
+        }
+        const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+        if (!regex.test(email)) {
+            toast('Please enter a valid email address')
+            return
+        }
+        if (password.length < 6) {
+            toast('Password must be atleast 6 characters long')
+            return
+        }
+        const newUser = {
             fullName: {
                 firstName: firstName,
                 lastName: lastName
             },
             email: email,
             password: password
-        })
+        }
+
+        try {
+            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/users/register`, newUser, { withCredentials: true })
+            if (response.status === 201) {
+                setUser(response.data.user)
+                localStorage.setItem('token', response.data.token)
+                navigate('/home')
+            } else {
+                toast(response.data.message || 'Error while registering the user.')
+            }
+        } catch (error) {
+            toast(error.response?.data?.message || 'Something went wrong, please try again.')
+        }
         setFirstName('')
         setLastName('')
         setEmail('')
@@ -39,8 +71,7 @@ function UserSignup() {
                             onChange={e => setFirstName(e.target.value)}
                             className='bg-[#eeeeee] w-1/2 rounded px-4 py-2 border text-lg placeholder:text-base' 
                         />
-                        <input 
-                            required 
+                        <input  
                             type="text" 
                             placeholder='Last Name' 
                             value={lastName}
@@ -68,7 +99,7 @@ function UserSignup() {
                         onChange={e => setPassword(e.target.value)}
                         className='bg-[#eeeeee] rounded px-4 py-2 border w-full text-lg placeholder:text-base mb-6' 
                     />
-                    <button className='bg-[#111] text-white font-semibold rounded px-4 py-2 w-full text-lg placeholder:text-base mb-3'>Login</button>
+                    <button className='bg-[#111] text-white font-semibold rounded px-4 py-2 w-full text-lg placeholder:text-base mb-3'>Signup</button>
                 </form>
 
                 <p className='text-center'>Already have an account? <Link to='/login' className='text-blue-600'>Login here</Link></p>
@@ -76,6 +107,15 @@ function UserSignup() {
             <div>
                 <p className='text-[10px] leading-tight'>This site is protected by reCAPTCHA and the <span className='underline'>Google Privacy Policy</span> and <span className='underline'>Terms of Service</span> apply.</p>
             </div>
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                theme="dark"
+            />
         </div>
     )
 }
