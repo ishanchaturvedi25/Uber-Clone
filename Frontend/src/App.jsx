@@ -8,6 +8,10 @@ import CaptainSignup from './pages/CaptainSignup';
 import Home from './pages/Home';
 import UserProtectWrapper from './pages/UserProtectWrapper';
 import UserLogout from './pages/UserLogout';
+import { ToastContainer } from 'react-toastify';
+import CaptainHome from './pages/CaptainHome';
+import CaptainProtectWrapper from './pages/CaptainProtectWrapper';
+import CaptainLogout from './pages/CaptainLogout';
 
 const App = () => {
   return (
@@ -23,8 +27,31 @@ const App = () => {
             <Home />
           </UserProtectWrapper>
         } />
-        <Route path='/user/logout' element={<UserLogout />} />
+        <Route path='/user/logout' element={
+          <UserProtectWrapper>
+            <UserLogout />
+          </UserProtectWrapper>
+        } />
+        <Route path='/captain-home' element={
+          <CaptainProtectWrapper>
+            <CaptainHome />
+          </CaptainProtectWrapper>
+        } />
+        <Route path='/captain/logout' element={
+          <CaptainProtectWrapper>
+            <CaptainLogout />
+          </CaptainProtectWrapper>
+        } />
       </Routes>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        theme="dark"
+      />
     </div>
   )
 }

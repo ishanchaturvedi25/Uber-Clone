@@ -1,16 +1,45 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useContext } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { toast } from "react-toastify"
+import axios from "axios"
+import { CaptainDataContext } from "../context/CaptainContext"
 
 const CaptainLogin = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [captainData, setCaptainData] = useState({})
+
+    const navigate = useNavigate()
+
+    const { setCaptain } = useContext(CaptainDataContext)
     
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault()
-        setCaptainData({email: email, password: password});
-        setEmail('')
-        setPassword('')
+        const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+        if (!regex.test(email)) {
+            toast.error("Please enter a valid email address")
+            return
+        }
+
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_BASE_URL}/api/captains/login`,
+                { email, password },
+                { withCredentials: true }
+            )
+    
+            if (response.status == 200) {
+                setCaptain(response.data.user)
+                localStorage.setItem("token", response.data.token)
+                navigate("/captain-home")
+            } else {
+                toast.error(response.data.message || 'Error while loging in captain')
+            }
+        } catch (error) {
+            toast.error(error.message || "Something went wrong, please try again.")
+        }
+
+        setEmail("")
+        setPassword("")
     }
 
     return (

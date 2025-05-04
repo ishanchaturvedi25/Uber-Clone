@@ -34,7 +34,11 @@ module.exports.registerCaptain = async (req, res, next) => {
 
         const token = captain.generateAuthToken();
 
-        return res.status(201).json({ token, captain });
+        return res.status(201).json({ token, captain: {
+            email: captain.email,
+            fullName: captain.fullName,
+            vehicle: captain.vehicle
+        } });
     } catch (error) {
         return res.status(400).json({ message: error.message || 'Errow while registering user' });;
     }
