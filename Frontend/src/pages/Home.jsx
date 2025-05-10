@@ -3,6 +3,8 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import 'remixicon/fonts/remixicon.css'
 import LocationSearchPanel from '../components/LocationSearchPanel'
+import VehiclePanel from '../components/VehiclePanel'
+import ConfirmRide from '../components/ConfirmRide'
 
 const Home = () => {
 
@@ -13,6 +15,8 @@ const Home = () => {
     const panelCloseRef = useRef(null)
     const [vehiclePanel, setVehiclePanel] = useState(false)
     const vehiclePanelRef = useRef(null)
+    const [confirmRidePanel, setConfirmRidePanel] = useState(false)
+    const confirmRidePanelRef = useRef(null)
 
     const submitHandler = (e) => {
         e.preventDefault()
@@ -50,6 +54,18 @@ const Home = () => {
         }
     }, [vehiclePanel])
 
+    useGSAP(function() {
+        if (confirmRidePanel) {
+            gsap.to(confirmRidePanelRef.current, {
+                transform: 'translateY(0)'
+            })
+        } else {
+            gsap.to(confirmRidePanelRef.current, {
+                transform: 'translateY(100%)'
+            })
+        }
+    }, [confirmRidePanel])
+
     return (
         <div className='h-screen relative overflow-hidden'>
             <img className='w-16 absolute left-5 top-5' src="https://logospng.org/download/uber/logo-uber-4096.png" alt="" />
@@ -85,42 +101,16 @@ const Home = () => {
                     </form>
                 </div>
                 <div ref={panelRef} className='bg-white h-0'>
-                    <LocationSearchPanel vehiclePanel={vehiclePanel} setVehiclePanel={setVehiclePanel} />
+                    <LocationSearchPanel setPanelOpen={setPanelOpen} setVehiclePanel={setVehiclePanel} />
                 </div>
             </div>
 
-            <div ref={vehiclePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full px-3 py-6 bg-white'>
-                <h3 className='font-semibold mb-5 text-2xl'>Choose a Vehicle</h3>
+            <div ref={vehiclePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full px-3 py-10 pt-14 bg-white'>
+                <VehiclePanel setConfirmRidePanel={setConfirmRidePanel} setVehiclePanel={setVehiclePanel} />
+            </div>
 
-                <div className='flex p-3 w-full mb-2 border-2 active:border-black rounded-xl items-center justify-between'>
-                    <img className='h-12' src="https://www.pngplay.com/wp-content/uploads/8/Uber-PNG-Photos.png" alt="" />
-                    <div className='w-1/2'>
-                        <h4 className='font-medium text-base'>UberGo <span><i className="ri-user-3-fill"></i>4</span></h4>
-                        <h5 className='font-medium text-sm'>2 mins away</h5>
-                        <p className='font-medium text-xs text-gray-600'>Affordable, compact rides</p>
-                    </div>
-                    <h2 className='text-lg font-semibold'>₹193.20</h2>
-                </div>
-
-                <div className='flex p-3 w-full mb-2 border-2 active:border-black rounded-xl items-center justify-between'>
-                    <img className='h-12' src="https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,w_956,h_637/v1649231091/assets/2c/7fa194-c954-49b2-9c6d-a3b8601370f5/original/Uber_Moto_Orange_312x208_pixels_Mobile.png" alt="" />
-                    <div className='w-1/2'>
-                        <h4 className='font-medium text-base'>Moto <span><i className="ri-user-3-fill"></i>1</span></h4>
-                        <h5 className='font-medium text-sm'>2 mins away</h5>
-                        <p className='font-medium text-xs text-gray-600'>Affordable, compact rides</p>
-                    </div>
-                    <h2 className='text-lg font-semibold'>₹65.17</h2>
-                </div>
-
-                <div className='flex p-3 w-full mb-2 border-2 active:border-black rounded-xl items-center justify-between'>
-                    <img className='h-12' src="https://tse4.mm.bing.net/th/id/OIP.gERohywpalGF3NjolmHt5wHaE7?cb=iwp1&rs=1&pid=ImgDetMain" alt="" />
-                    <div className='w-1/2'>
-                        <h4 className='font-medium text-base'>UberAuto <span><i className="ri-user-3-fill"></i>3</span></h4>
-                        <h5 className='font-medium text-sm'>2 mins away</h5>
-                        <p className='font-medium text-xs text-gray-600'>Affordable, compact rides</p>
-                    </div>
-                    <h2 className='text-lg font-semibold'>₹118.21</h2>
-                </div>
+            <div ref={confirmRidePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full px-3 py-10 pt-14 bg-white'>
+                <ConfirmRide setConfirmRidePanel={setConfirmRidePanel} />
             </div>
         </div>
     )
