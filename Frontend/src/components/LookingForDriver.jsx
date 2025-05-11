@@ -1,12 +1,12 @@
 import React from 'react'
 
-const ConfirmRide = (props) => {
+const LookingForDriver = (props) => {
     return (
         <div>
-            <h5 className='p-1 text-center w-[93%] absolute top-0' onClick={() => props.setConfirmRidePanel(false)}>
+            <h5 className='p-1 text-center w-[93%] absolute top-0' onClick={() => props.setVehicleFound(false)}>
                 <i className="text-xl text-gray-500 ri-arrow-down-wide-line"></i>
             </h5>
-            <h3 className='font-semibold mb-5 text-2xl'>Confirm your ride</h3>
+            <h3 className='font-semibold mb-5 text-2xl'>Looking for a driver</h3>
             
             <div className='flex gap-2 justify-between flex-col items-center'>
                 <img className='h-20' src="https://www.pngplay.com/wp-content/uploads/8/Uber-PNG-Photos.png" alt="" />
@@ -33,10 +33,7 @@ const ConfirmRide = (props) => {
                         </div>
                     </div>
                 </div>
-                <button onClick={() => {
-                    props.setVehicleFound(true)
-                    props.setConfirmRidePanel(false)
-                }} className='w-full mt-5 bg-green-600 text-white font-semibold p-2 rounded-lg'>
+                <button className='w-full mt-5 bg-green-600 text-white font-semibold p-2 rounded-lg'>
                     Confirm
                 </button>
             </div>
@@ -44,4 +41,4 @@ const ConfirmRide = (props) => {
     )
 }
 
-export default ConfirmRide
+export default LookingForDriver
